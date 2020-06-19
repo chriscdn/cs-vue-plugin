@@ -49,7 +49,7 @@ export default {
 
 			this.loading = true
 
-			return this.$axios.get(url, {
+			return this.$session.get(url, {
 				params: this.fetchOptions
 			}).then(response => {
 				// this.$data = Object.assign({}, this.$data, response.data)

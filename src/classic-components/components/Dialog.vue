@@ -1,6 +1,6 @@
 <template>
 	<transition name="fade" >
-		<div v-if="localDialog" class="modal" >
+		<div v-if="localValue" class="modal" >
 			<div class="modal-content" :style="[innerStyle]" v-click-outside="closeDialog">
 				<slot></slot>
 			</div>
@@ -13,7 +13,7 @@ import ClickOutside from 'vue-click-outside'
 
 export default {
 	props: {
-		dialog: {
+		value: {
 			type: Boolean,
 			required: true
 		},
@@ -23,7 +23,7 @@ export default {
 		}
 	},
 	model: {
-		prop: 'dialog',
+		prop: 'value',
 		event: 'change'
 	},	
 	directives: {
@@ -35,12 +35,12 @@ export default {
 		}
 	},
 	computed: {
-		localDialog: {
+		localValue: {
 			set(value) {
 				this.$emit('change', value)
 			},
 			get() {
-				return this.dialog
+				return this.value
 			}
 		},
 		innerStyle() {
@@ -52,12 +52,12 @@ export default {
 	methods: {
 		closeDialog() {
 			if (this.dialog500) {
-				this.localDialog = false
+				this.localValue = false
 			}
 		}
 	},
 	watch: {
-		localDialog(value) {
+		localValue(value) {
 			setTimeout(() => this.dialog500 = value, 500)
 		}
 	}

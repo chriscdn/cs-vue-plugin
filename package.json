@@ -8,11 +8,14 @@
 		"build": "vue-cli-service build --target lib --name VueWidgets vue-widgets.js"
 	},
 	"dependencies": {
-		"@kweli/cs-rest": "^1.0.9",
+		"ajv": "^6.12.2",
+		"arrify": "^2.0.1",
 		"build-url": "^2.0.0",
 		"lodash.clonedeep": "^4.5.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.get": "^4.4.2",
+		"lodash.has": "^4.5.2",
+		"lodash.set": "^4.3.2",
 		"moment": "^2.27.0",
 		"vue-click-outside": "^1.1.0",
 		"vue-flatpickr-component": "^8.1.5",

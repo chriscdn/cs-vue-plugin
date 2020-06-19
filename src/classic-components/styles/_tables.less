@@ -20,8 +20,7 @@
 	thead {
 		tr {
 
-			td,
-			th {
+			td, th {
 				a {
 					color: @color4;
 					text-decoration: none;
@@ -32,7 +31,9 @@
 				font-weight: 700;
 				padding: @tdpadding;
 				white-space: nowrap;
-
+				&.min-width {
+					width: 1%;
+				}
 			}
 
 		}
@@ -85,9 +86,6 @@
 		background-color: @color1;
 	}
 
-
-
-
 	tbody {
 		tr {
 			td {
@@ -108,18 +106,16 @@
 	tfoot {
 		tr {
 			td {
-				padding: 10px 8px;
+				padding: @tdpadding;
 				text-align: center;
 			}
 		}
 	}
 
-
 	&.rhcompact {
 
 		thead,
-		tbody,
-		tfoot {
+		tbody {
 			tr {
 
 				td,
@@ -131,19 +127,19 @@
 	}
 }
 
-.rhform button,
-.rhform input[type=button],
-.rhform input[type=submit],
-.rhform input[type=reset],
-.rhtable button,
-.rhtable input[type=button],
-.rhtable input[type=submit],
-.rhtable input[type=reset] {
-	background: @color3;
-	border: #2E3D98 1px solid;
-	color: #232e72;
-	margin: 0 1px;
-}
+// .rhform button,
+// .rhform input[type=button],
+// .rhform input[type=submit],
+// .rhform input[type=reset],
+// .rhtable button,
+// .rhtable input[type=button],
+// .rhtable input[type=submit],
+// .rhtable input[type=reset] {
+// 	background: @color3;
+// 	border: #2E3D98 1px solid;
+// 	color: #232e72;
+// 	margin: 0 1px;
+// }
 
 .rhproperties>tbody>tr>td {
 	border: 1px solid @color0;

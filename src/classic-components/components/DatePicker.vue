@@ -1,7 +1,8 @@
 <template>
 	<div>
 		<flat-pickr v-model="localValue" :config="localOptions" @on-close="onClose" @on-change="onClose"/>
-		<button @click="clear">{{ 'clear' }}</button>
+		<cs-button @click="endOfDay" v-if="showEndOfDay">{{ 'end of day' }}</cs-button>
+		<cs-button @click="clear">{{ 'clear' }}</cs-button>
 	</div>
 </template>
 <script>
@@ -60,6 +61,9 @@ export default {
 				// dateFormat: 'Z',
 				...this.options
 			}
+		},
+		showEndOfDay() {
+			return this.enableTime
 		}
 	},
 	methods: {
@@ -75,6 +79,13 @@ export default {
 		},
 		clear() {
 			this.$emit('change', null)
+		},
+		endOfDay() {
+			let d = moment(this.localValue)
+			d.hours(23)
+			d.minutes(59)
+			d.seconds(59)
+			this.$emit('change', this.format(d))
 		}
 	}
 }
