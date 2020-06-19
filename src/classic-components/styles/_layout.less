@@ -1,0 +1,34 @@
+.loopingClass (@prefix, @prop, @i) when (@i < 10) {
+	.@{prefix}@{i} {
+		@{prop}: @i*4px  !important;
+	}
+
+	.loopingClass(@prefix, @prop, @i + 1);
+}
+
+.loopingClass2 (@prefix, @prop1, @prop2, @i) when (@i < 10) {
+	.@{prefix}@{i} {
+		@{prop1}: @i*4px  !important;
+		@{prop2}: @i*4px  !important;
+	}
+
+	.loopingClass2(@prefix, @prop1, @prop2, @i + 1);
+}
+
+.loopingClass(pa-, padding, 0);
+.loopingClass(pl-, padding-left, 0);
+.loopingClass(pt-, padding-top, 0);
+.loopingClass(pr-, padding-right, 0);
+.loopingClass(pb-, padding-bottom, 0);
+
+.loopingClass(ma-, margin, 0);
+.loopingClass(ml-, margin-left, 0);
+.loopingClass(mt-, margin-top, 0);
+.loopingClass(mr-, margin-right, 0);
+.loopingClass(mb-, margin-bottom, 0);
+
+.loopingClass2(px-, padding-left, padding-right, 0);
+.loopingClass2(py-, padding-top, padding-bottom, 0);
+.loopingClass2(mx-, margin-left, margin-right, 0);
+.loopingClass2(my-, margin-top, margin-bottom, 0);
+

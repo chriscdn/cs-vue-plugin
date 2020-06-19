@@ -1,1 +1,1 @@
-# cs-vue-plugin
+# @chriscdn/cs-vue-plugin
