@@ -1,5 +1,6 @@
 <template>
 	<div>
+		<!-- <slot v-bind:schema="schema"> -->
 		<select v-if="lwidget == 'select'" v-model="valueLocal">
 			<option v-for="choice in choices" :key="choice.value" :value="choice.value">{{ choice.text }}</option>
 		</select>
@@ -7,11 +8,11 @@
 		<UserPicker v-else-if="lwidget == 'usergroup'" v-model="valueLocal" :groups="true" />
 		<DatePicker v-else-if="lwidget == 'date'" v-model="valueLocal" :enableTime="false" :format="formatDateString" />
 		<DatePicker v-else-if="lwidget == 'datetime'" v-model="valueLocal" :enableTime="true" :format="formatDateTimeString" />
-		<input v-else type="text" v-model="valueLocal" :maxlength="maxLength" />
+		<input v-else type="search" v-model="valueLocal" :maxlength="maxLength" />
+		<!-- </slot> -->
 		<SchemaErrorMessages :error-path="errorPath" />
 	</div>
 </template>
-
 <script>
 import SchemaErrorMessages from './SchemaErrorMessages.vue'
 const get = require('lodash.get')
@@ -47,6 +48,7 @@ export default {
 	computed: {
 		valueLocal: {
 			set(value) {
+				// const setValue = this.isDefinedAndNotBlankString(value) ? value : null
 				this.$emit('change', value)
 			},
 			get() {
@@ -66,6 +68,7 @@ export default {
 				})
 
 				return items
+				// return [...items, {text:'fake', value:'zzzzz'}]
 			} else {
 				return null
 			}
@@ -137,6 +140,7 @@ export default {
 			const d = moment(value)
 			return d.isValid() && value ? d.format('YYYY-MM-DDTHH:mm:ss') : null
 		}
+		
 	}
 }
 </script>

@@ -4,8 +4,8 @@
 		<!-- Using key="i" is not idea.  Perhaps we have to generate keys? This would allow it to work nicely with the transitions -->
 		<div v-for="(v,i) in valueLocal" :key="i" class="d-flex my-1">
 			<!-- <slot v-bind:index="i" v-bind:schema="schema"></slot> -->
-			<SchemaFormField v-model="valueLocal[i]" :schema="schema" :error-path="`${errorPath}[${i}]`" />
-			<div class="d-flex">
+			<SchemaFormField v-model="valueLocal[i]" :schema="schema" :error-path="`${errorPath}[${i}]`" class="flex-grow-1" />
+			<div class="d-flex flex-shrink-0">
 				<input v-if="canAdd" type="image" :src="`${$img}add-row.gif`" @click="add(i)" class="ml-1" width="16px" height="16px" />
 				<input v-if="canRemove" type="image" :src="`${$img}delete-row.gif`" @click="remove(i)" class="ml-1" width="16px" height="16px" />
 				<!-- <button v-if="canRemove" icon color="error" @click="remove(i)">-</button> -->

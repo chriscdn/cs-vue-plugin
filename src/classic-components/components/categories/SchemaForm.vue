@@ -3,7 +3,6 @@
 		<slot v-bind:schema="schema" v-bind:categories="categories" v-bind:saveCategories="saveCategories" v-bind:validate="validate"></slot>
 	</div>
 </template>
-
 <script>
 const get = require('lodash.get')
 const has = require('lodash.has')
@@ -52,6 +51,12 @@ export default {
 			})
 
 			return results
+		},
+		hasNoValidationErrors() {
+			return !this.hasValidationErrors
+		},
+		hasValidationErrors() {
+			return !!this.validation.length
 		}
 	},
 	methods: {
@@ -75,16 +80,41 @@ export default {
 			return get(this.categories, keypath)
 		},
 
-		validate() {
+		validate(emit = true) {
 			this.validation = validator(this.schema, this.categories)
+
+			if (emit) {
+				if (this.hasValidationErrors) {
+					this.$emit('didFailValidation')
+				} else {
+					this.$emit('didPassValidation')
+				}
+			}
+
+			return this.hasNoValidationErrors
 		},
 		async saveCategories() {
-			const response = await this.$session.postForm(`/api/v1/rh/nodes/${this.dataid}/categories/`, {
-				categories: this.categories
-			})
 
-			this.schema = get(response, 'data.schema')
-			this.categories = get(response, 'data.categories')
+			if (this.validate(false)) {
+
+				this.$emit('willSaveCategories')
+
+				this.$session.postForm(`/api/v1/rh/nodes/${this.dataid}/categories/`, {
+						categories: this.categories
+					})
+					.then(response => {
+						this.schema = get(response, 'data.schema')
+						this.categories = get(response, 'data.categories')
+						this.$emit('didSaveCategories')
+					})
+					.catch(err => {
+						console.log(err)
+						this.$emit('didFailSaveCategories', get(err, 'response.data'))
+					})
+			} else {
+				this.$emit('didFailValidation')
+			}
+
 		},
 		async loadCategories() {
 			this.$session.get(`/api/v1/rh/nodes/${this.dataid}/categories/`, {

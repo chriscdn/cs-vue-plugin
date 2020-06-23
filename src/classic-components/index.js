@@ -17,18 +17,19 @@ import PaginatorVue from './components/PaginatorVue.vue'
 import SchemaForm from './components/categories/SchemaForm.vue'
 import SchemaFormField from './components/categories/SchemaFormField.vue'
 import SchemaMultiFormField from './components/categories/SchemaMultiFormField.vue'
+import SchemaErrorMessages from './components/categories/SchemaErrorMessages.vue'
 
 import SortHeader from './components/SortHeader.vue'
 import UserLink from './components/UserLink.vue'
 import UserPicker from './components/UserPicker.vue'
 import TargetBrowseNodePicker from './components/TargetBrowseNodePicker.vue'
-import { ToggleButton } from 'vue-js-toggle-button'
+import {
+    ToggleButton
+} from 'vue-js-toggle-button'
 import Toasted from 'vue-toasted'
 
 // import 'v-slim-dialog/dist/v-slim-dialog.css'
 // import SlimDialog from 'v-slim-dialog'
-
-
 
 import './styles/common.less'
 import './styles/cs-vue-plugin.less'
@@ -63,15 +64,13 @@ export default {
         Vue.component('SchemaForm', SchemaForm)
         Vue.component('SchemaFormField', SchemaFormField)
         Vue.component('SchemaMultiFormField', SchemaMultiFormField)
-
+        Vue.component('SchemaErrorMessages', SchemaErrorMessages)
 
         Vue.component('SortHeader', SortHeader)
         Vue.component('TargetBrowseNodePicker', TargetBrowseNodePicker)
         Vue.component('UserLink', UserLink)
         Vue.component('UserPicker', UserPicker)
         Vue.component('ToggleButton', ToggleButton)
-
-
 
         Vue.filter('moment', function(value, format) {
             let d = moment(value)
@@ -85,10 +84,10 @@ export default {
             }
         })
 
+        // https://www.npmjs.com/package/vue-toasted
         Vue.use(Toasted, {
             duration: 5000
         })
-
 
         // Vue.use(SlimDialog)
         Vue.use(Loading)

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<!-- get rid of div -->
-		<Autocomplete :placeholder="placeholder" v-model="localValue" :width="width" :loading="loading" :search-input.sync="searchText" :readonly="readonly" :items="items">
+		<Autocomplete :placeholder="placeholder" v-model="localValue" :width="width" :loading="loading" :search-input.sync="searchText" :readonly="readonly" :items="items" :returnObject="returnObject" :combobox="combobox">
 			<template v-slot:item="data">
 				<img v-if="data.item.type == USER" :src="`${$img}guy.gif`" />
 				<img v-else-if="data.item.type == GROUP" :src="`${$img}2-guys.gif`" />
@@ -20,7 +20,7 @@ export default {
 
 	props: {
 		value: {
-			type: Number,
+			type: [String, Number],
 			required: false
 		},
 		users: {
@@ -34,6 +34,14 @@ export default {
 		width: {
 			type: [String, Number],
 			default: '100%'
+		},
+		returnObject: {
+			type: Boolean,
+			default: false
+		},
+		combobox: {
+			type: Boolean,
+			default: false
 		}
 	},
 
@@ -55,8 +63,6 @@ export default {
 	computed: {
 		localValue: {
 			set(value) {
-				// console.log('UserPicker emitting: ', value)
-				// this.$emit('change', get(value, 'data'))
 				this.$emit('change', value)
 			},
 			get() {
@@ -74,7 +80,9 @@ export default {
 				where_type = this.GROUP
 			}
 
-			return { where_type }
+			return {
+				where_type
+			}
 		},
 		placeholder() {
 			if (this.pleaseWait) {
@@ -101,12 +109,27 @@ export default {
 		querySelections: debounce(function(v) {
 			this.loading = true
 
-			this.$session.members.userQuery(v, this.options, 'v1')
+			this.$session.members.userQuery(v, this.options, 'v2')
 				.then(response => {
-					this.items = response.data.data.map(item => ({
-						text: get(item, 'name_formatted'),
-						value: get(item, 'id'),
-						type: get(item, 'type')
+					// v1
+					// this.items = response.data.data.map(item => ({
+					// 	text: get(item, 'name_formatted'),
+					// 	value: get(item, 'id'),
+					// 	type: get(item, 'type')
+					// }))
+					// 
+
+					// v2
+					this.items = response.data.results.map(item => ({
+						id: item.data.properties.id,
+						first_name: item.data.properties.first_name,
+						last_name: item.data.properties.last_name,
+						name: item.data.properties.name,
+						name_formatted: item.data.properties.name_formatted,
+						group_id: item.data.properties.group_id,
+						text: item.data.properties.name_formatted,
+						value: item.data.properties.id,
+						type: item.data.properties.type
 					}))
 				})
 				.finally(() => this.loading = false)
@@ -119,7 +142,7 @@ export default {
 		loadInitialValue() {
 			let initialValue = this.value
 
-			if (initialValue) {
+			if (initialValue && !this.combobox) {
 				this.pleaseWait = true
 				this.readonly = true
 				this.loading = true

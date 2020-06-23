@@ -5,7 +5,7 @@
 			<input ref="input" type="search" v-model="inputText" autocomplete="off" :class="{invalidSelection: !this.isValidSelection}" :placeholder="placeholder" :readonly="readonly" @keydown="keydown" @search="clearInput" @keydown.38.prevent="currentFocus = Math.max(-1, currentFocus - 1)" @keydown.40.prevent="currentFocus = Math.min(items.length-1, currentFocus + 1)" @keydown.enter.prevent="select(currentFocus)" @focus="setFocus" @keydown.tab="fakeBlur" />
 		</div>
 		<!-- <transition name="custom"> -->
-		<div class="autocomplete-items" v-if="focus && items.length && inputText.length">
+		<div class="autocomplete-items" v-if="focus && items.length && !!inputText">
 			<div v-for="(item, index) in items" :key="index" class="autocomplete-item" :class="{'autocomplete-active': currentFocus==index}" @click="select(index)">
 				<slot name="item" v-bind:item="item">{{ item }}</slot>
 			</div>
@@ -56,6 +56,10 @@ export default {
 			// not implemented yet
 			type: Boolean,
 			default: false
+		},
+		combobox: {
+			type: Boolean,
+			default: false
 		}
 	},
 	directives: {
@@ -78,6 +82,7 @@ export default {
 				width: isNaN(this.width) ? this.width : `${this.width}px`
 			}
 		},
+
 		localValue: {
 			set(value) {
 				if (!value) {
@@ -93,23 +98,42 @@ export default {
 			}
 		},
 		isValidSelection() {
-			// return (this.inputText.length == 0 && this.localValue == null) || (this.localValue !== null)
 			return !!this.localValue
 		},
 	},
 	methods: {
 		select(index) {
+			// default to first item
+
+			if (!this.combobox) {
+				index = Math.max(index, 0)
+			}
+
 			let selectedItem = this.items[index]
 
 			// on selection we force an immediate blur
 			// this order matters...
 			this.$refs.input.blur()
-
 			this.fakeBlur()
 
-			this.localValue = selectedItem
-			this.destroyWatcher()
-			this.inputText = selectedItem[this.itemText]
+			if (this.combobox) {
+				if (selectedItem) {
+					this.localValue = selectedItem
+				}
+			} else {
+				this.localValue = selectedItem
+				this.destroyWatcher()
+				this.inputText = selectedItem[this.itemText]
+			}
+
+
+
+			/// inputText should be managed from outside, no???? when combobox?
+			// if (selectedItem || !this.combobox) {
+			// 	this.localValue = selectedItem
+			// 	this.destroyWatcher()
+			// 	this.inputText = selectedItem[this.itemText]
+			// }
 		},
 
 		setFocus() {
@@ -129,15 +153,15 @@ export default {
 		},
 		keydown(event) {
 			this.createWatcher()
-			// doesn't handle backspaces
-			// if (String.fromCharCode(event.keyCode).match(/(\w|\s)/g)) {
-			// 	this.localValue = null
-			// }
 		},
 		createWatcher() {
 			if (!this.$watcher) {
 				this.$watcher = this.$watch('inputText', value => {
-					this.localValue = null
+					if (this.combobox) {
+						this.localValue = { text: value }
+					} else {
+						this.localValue = null
+					}
 				})
 			}
 		},
@@ -151,6 +175,12 @@ export default {
 	watch: {
 		inputText(value) {
 			this.$emit('update:search-input', value)
+
+			// if (this.combobox) {
+			// 	this.localValue = {
+			// 		text: value
+			// 	}
+			// }
 		},
 
 		items() {
@@ -158,16 +188,28 @@ export default {
 
 			if (this.localValue) {
 				this.destroyWatcher()
-				this.inputText = get(this.localValue, this.itemText, '')
+
+				if (!this.combobox) {
+					this.inputText = get(this.localValue, this.itemText, '')
+				}
 			}
 		},
 
-		localValue(value) {
-			if (value) {
-				// conso
-				// this.inputText = get(value, this.itemText, '')
-			}
+		value: {
+			handler(v) {
+				if (this.combobox) {
+					this.destroyWatcher()
+					this.inputText = v
+				}
+			},
+			immediate: true
 		},
+		// localValue(value) {
+		// 	if (value) {
+		// 		// conso
+		// 		// this.inputText = get(value, this.itemText, '')
+		// 	}
+		// },
 
 		focus(value) {
 			if (value) {
@@ -176,19 +218,15 @@ export default {
 				// blur
 				if (this.localValue) {
 					// all good, keep it
-				} else {
+				} else if (!this.combobox) {
 					// otherwise, clear the text field
 					this.createWatcher()
 					this.inputText = null
 				}
 			}
 		}
-		// value(v) {
-		// 	console.log(`value: ${v}`)
-		// }
 	},
 	mounted() {
-		// console.log(`mounted: ${this.value}`)
 		this.createWatcher()
 	}
 }
