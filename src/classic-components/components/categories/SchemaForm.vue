@@ -1,6 +1,6 @@
 <template>
 	<div v-if="loaded" class="rhcore">
-		<slot v-bind:schema="schema" v-bind:categories="categories" v-bind:saveCategories="saveCategories" v-bind:validate="validate"></slot>
+		<slot v-bind:schema="schema" v-bind:categories="categories" v-bind:saveCategories="saveCategories" v-bind:validate="validate" v-bind:reset="loadCategories"></slot>
 	</div>
 </template>
 <script>
@@ -20,6 +20,10 @@ export default {
 		schemas: {
 			type: Array,
 			default: () => []
+		},
+		loadcb: {
+			type: Function,
+			default: item => item
 		}
 	},
 
@@ -76,8 +80,8 @@ export default {
 			}
 		},
 
-		getter(keypath) {
-			return get(this.categories, keypath)
+		getter(keypath, defaultValue=null) {
+			return get(this.categories, keypath, defaultValue)
 		},
 
 		validate(emit = true) {
@@ -123,8 +127,11 @@ export default {
 					}
 				})
 				.then(response => {
-					this.schema = get(response, 'data.schema')
-					this.categories = get(response, 'data.categories')
+
+					const items = this.loadcb(response.data)
+
+					this.schema = items.schema
+					this.categories = items.categories
 				})
 		}
 	},

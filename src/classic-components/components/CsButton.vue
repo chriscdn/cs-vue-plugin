@@ -20,11 +20,13 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@active-color: #232e72;
+@disabled-color: #DDD;
 input {
-	color: #232e72;
+	color: @active-color;
 	padding: 2px 15px;
 	background: #FFFFFF;
-	border: 1px solid #232e72;
+	border: 1px solid @active-color;
 	cursor: pointer;
 	border-radius: 12px;
 	margin: 2px 6px;
@@ -32,6 +34,9 @@ input {
 	&:hover {
 		border: 1px solid black;
 	}
-
+	&[disabled], :disabled {
+		border: 1px solid @disabled-color;
+		color: @disabled-color;
+	}
 }
 </style>

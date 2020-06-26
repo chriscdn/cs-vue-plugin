@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div :class="{'has-errors':hasErrors}">
 		<!-- <slot v-bind:schema="schema"> -->
 		<select v-if="lwidget == 'select'" v-model="valueLocal">
 			<option v-for="choice in choices" :key="choice.value" :value="choice.value">{{ choice.text }}</option>
@@ -42,17 +42,16 @@ export default {
 		prop: 'value',
 		event: 'change'
 	},
-	data() {
-		return {}
-	},
+	// data() {
+	// 	return {}
+	// },
 	computed: {
 		valueLocal: {
 			set(value) {
-				// const setValue = this.isDefinedAndNotBlankString(value) ? value : null
-				this.$emit('change', value)
+				this.$emit('change', this.nullify(value))
 			},
 			get() {
-				return this.value
+				return this.nullify(this.value)
 			}
 		},
 		choices() {
@@ -91,10 +90,6 @@ export default {
 		fieldTypeArray() {
 			return arrify(this.fieldType)
 		},
-		hasErrors() {
-			return !!this.errors.length
-		},
-
 		lwidget() {
 			if (this.widget) {
 				return this.widget
@@ -129,6 +124,15 @@ export default {
 		},
 		isDateTimePicker() {
 			return this.fieldTypeArray.includes('string') && (this.format == 'date-time')
+		},
+		errors() {
+			return get(this.payload, 'errors', {})
+		},
+		errorMessages() {
+			return this.errors[this.errorPath]
+		},
+		hasErrors() {
+			return this.errorMessages && !!this.errorMessages.length
 		}
 	},
 	methods: {
@@ -139,16 +143,29 @@ export default {
 		formatDateTimeString(value) {
 			const d = moment(value)
 			return d.isValid() && value ? d.format('YYYY-MM-DDTHH:mm:ss') : null
+		},
+		nullify(value) {
+			return value
+			// value = (typeof value === 'string') ? value.trim() : value
+			// return [null, undefined, ""].includes(value) ? null : value
 		}
-		
+	},
+	inject: ['payload'],
+	mounted() {
+		// this forces a nullify call on the values
+		this.valueLocal = this.value
 	}
 }
 </script>
+
 <style lang="less" scoped>
 select,
 input {
 	padding: 0.2em;
 	width: 100%;
 	border: 1px #CCC solid;
+}
+.has-errors {
+	background-color: orange;
 }
 </style>

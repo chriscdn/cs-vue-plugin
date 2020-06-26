@@ -8,7 +8,7 @@ export default {
 	props: {
 		mimetypes: {
 			type: Array,
-			default: () => ['image/jpeg']
+			default: () => null
 		}
 	},
 	data() {
@@ -53,8 +53,11 @@ export default {
 			this.$emit('predrop')
 
 			if (event.dataTransfer && event.dataTransfer.files.length) {
-				let files = Array.from(event.dataTransfer.files).filter(file => this.mimetypes.includes(file.type))
+				let files = Array.from(event.dataTransfer.files)
 
+				if (this.mimetypes) {
+					files = files.filter(file => this.mimetypes.includes(file.type))
+				}
 				// console.log(files)
 
 				this.$emit('drop', files)

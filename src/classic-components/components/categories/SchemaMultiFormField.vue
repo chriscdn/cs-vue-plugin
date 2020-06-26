@@ -8,7 +8,6 @@
 			<div class="d-flex flex-shrink-0">
 				<input v-if="canAdd" type="image" :src="`${$img}add-row.gif`" @click="add(i)" class="ml-1" width="16px" height="16px" />
 				<input v-if="canRemove" type="image" :src="`${$img}delete-row.gif`" @click="remove(i)" class="ml-1" width="16px" height="16px" />
-				<!-- <button v-if="canRemove" icon color="error" @click="remove(i)">-</button> -->
 			</div>
 		</div>
 		<!-- </transition-group> -->

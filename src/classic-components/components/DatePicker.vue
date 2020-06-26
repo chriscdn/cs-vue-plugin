@@ -1,7 +1,9 @@
 <template>
 	<div>
 		<flat-pickr v-model="localValue" :config="localOptions" @on-close="onClose" @on-change="onClose"/>
+		<cs-button @click="now" v-if="showNow">{{ 'now' }}</cs-button>
 		<cs-button @click="endOfDay" v-if="showEndOfDay">{{ 'end of day' }}</cs-button>
+
 		<cs-button @click="clear">{{ 'clear' }}</cs-button>
 	</div>
 </template>
@@ -29,6 +31,10 @@ export default {
 			type: Function,
 			default: value => value
 		},
+		showNow: {
+			type: Boolean,
+			default: true
+		},
 		// https://flatpickr.js.org/options/
 		options: {
 			type: Object,
@@ -55,6 +61,8 @@ export default {
 				formatDate: this.formatDate,
 				enableTime: this.enableTime,
 				time_24hr: true,
+				defaultHour: 0,
+				defaultMinute: 0,
 				// altInput: true,
 				// altFormat: this.$jsLongDateFormat,
 				// allowInput: true,
@@ -70,7 +78,6 @@ export default {
 		formatDate(input) {
 			// this is what you see in the user interface
 			let d = moment(input)
-
 			return this.enableTime ? d.format(this.$jsLongDateFormat) : d.format(this.$jsShortDateFormat)
 		},
 		onClose(selectedDates) {
@@ -80,8 +87,11 @@ export default {
 		clear() {
 			this.$emit('change', null)
 		},
+		now() {
+			this.$emit('change', this.format(Date.now()))
+		},
 		endOfDay() {
-			let d = moment(this.localValue)
+			let d = moment(this.localValue || Date.now())
 			d.hours(23)
 			d.minutes(59)
 			d.seconds(59)

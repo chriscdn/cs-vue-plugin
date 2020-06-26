@@ -21,6 +21,9 @@ export default {
 		errorMessages() {
 			return this.errors[this.errorPath]
 		},
+		hasErrors() {
+			return !!this.errorMessages.length
+		}
 	},
 
 	inject: ['payload']

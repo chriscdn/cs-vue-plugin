@@ -23,6 +23,8 @@ import SortHeader from './components/SortHeader.vue'
 import UserLink from './components/UserLink.vue'
 import UserPicker from './components/UserPicker.vue'
 import TargetBrowseNodePicker from './components/TargetBrowseNodePicker.vue'
+import VersionFunctionMenu from './components/VersionFunctionMenu.vue'
+
 import {
     ToggleButton
 } from 'vue-js-toggle-button'
@@ -71,7 +73,8 @@ export default {
         Vue.component('UserLink', UserLink)
         Vue.component('UserPicker', UserPicker)
         Vue.component('ToggleButton', ToggleButton)
-
+        Vue.component('VersionFunctionMenu', VersionFunctionMenu)
+        
         Vue.filter('moment', function(value, format) {
             let d = moment(value)
             switch (format) {
