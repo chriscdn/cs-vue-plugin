@@ -132,6 +132,15 @@ export default {
 			this.breadcrumb = null
 		}
 	},
+	watch: {
+		dataid(value) {
+			this.$emit('updated', {
+				dataid: value,
+				name: this.name,
+				breadcrumb: this.breadcrumb
+			})
+		}
+	},
 	async mounted() {
 		window[this.globalCallbackFunctionName] = this.callback
 
@@ -147,11 +156,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.rhnodeselect input[type="text"] {
-	width: 20em;
+.rhnodeselect {
+	input[type="text"] {
+		width: 20em;
 
-	div {
-		font-size: 0.9em;
+		div {
+			font-size: 0.9em;
+		}
+	}
+
+	>button {
+		margin-left: 0.2em;
+
 	}
 }
 </style>

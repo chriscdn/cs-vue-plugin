@@ -13,6 +13,7 @@ import PageDropZone from '../shared-components/PageDropZone.vue'
 import PageTitle from './components/PageTitle.vue'
 import Paginator from './components/Paginator.vue'
 import PaginatorVue from './components/PaginatorVue.vue'
+import PleaseWait from './components/PleaseWait.vue'
 
 import SchemaForm from './components/categories/SchemaForm.vue'
 import SchemaFormField from './components/categories/SchemaFormField.vue'
@@ -62,6 +63,7 @@ export default {
         Vue.component('PageTitle', PageTitle)
         Vue.component('Paginator', Paginator)
         Vue.component('PaginatorVue', PaginatorVue)
+        Vue.component('PleaseWait', PleaseWait)
 
         Vue.component('SchemaForm', SchemaForm)
         Vue.component('SchemaFormField', SchemaFormField)

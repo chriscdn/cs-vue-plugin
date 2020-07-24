@@ -1,5 +1,5 @@
 {
-	"name": "@chriscdn/cs-vue-plugin",
+	"name": "@kweli/cs-vue-plugin",
 	"version": "1.0.0",
 	"main": "index.js",
 	"browser": "index.js",

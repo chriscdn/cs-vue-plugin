@@ -2,6 +2,7 @@ import Session from '../session'
 import SnackBarQueue from './SnackBarQueue.vue'
 import UserAutocomplete from './UserAutocomplete.vue'
 import DropZone from '../shared-components/DropZone.vue'
+import DatePickerDialog from './DatePickerDialog.vue'
 
 export default {
 	install(Vue, options) {
@@ -14,6 +15,8 @@ export default {
 		Vue.component('SnackBarQueue', SnackBarQueue)
 		Vue.component('UserAutocomplete', UserAutocomplete)
 		Vue.component('DropZone', DropZone)
+		Vue.component('DatePickerDialog', DatePickerDialog)
+		
 	}
 
 }
