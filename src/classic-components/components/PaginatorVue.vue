@@ -43,21 +43,35 @@ export default {
 	},
 
 	methods: {
+
+		fetchFacets() {
+			return this.$session.get(this.url, {
+				params: {
+					...this.fetchOptions, fetchfacets: 1
+				}
+			}).then(response => {
+				this.facets = get(response, 'data.facets', []) 
+			}).catch(error => {
+				// debugger
+				// error.message
+				console.log(error.message)
+			})
+		},
+
 		fetchItems: debounce(function() {
 	
-			let url = [this.$cgi, this.url].join('')
+			// let url = [this.$cgi, this.url].join('')
 
 			this.loading = true
 
-			return this.$session.get(url, {
+			return this.$session.get(this.url, {
 				params: this.fetchOptions
 			}).then(response => {
 				// this.$data = Object.assign({}, this.$data, response.data)
 				this.items = response.data.items
 				this.paginator = response.data.paginator
 				this.facetState.filter = response.data.filter
-				// these are available facets, and say nothing about facet selection state
-				this.facets = get(response, 'data.facets', []) 
+				// this.facets = get(response, 'data.facets', []) 
 				this.customOptions = get(response, 'data.customOptions', [])
 			}).catch(error => {
 				// debugger
@@ -120,6 +134,9 @@ export default {
 	},
 	created() {	
 		this.fetchItems()
+
+		// this isn't good - should be refactored
+		this.fetchFacets()
 	}
 }
 </script>

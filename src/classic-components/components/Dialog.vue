@@ -1,6 +1,6 @@
 <template>
 	<transition name="fade" >
-		<div v-if="localValue" class="modal" >
+		<div v-if="localValue" class="modal" @scroll="handleScroll">
 			<div class="modal-content" :style="[innerStyle]" v-click-outside="closeDialog">
 				<slot></slot>
 			</div>
@@ -10,7 +10,7 @@
 
 <script>
 import ClickOutside from 'vue-click-outside'
-
+// consider https://github.com/willmcpo/body-scroll-lock
 export default {
 	props: {
 		value: {
@@ -34,6 +34,18 @@ export default {
 			dialog500: false
 		}
 	},
+	methods: {
+		closeDialog() {
+			if (this.dialog500) {
+				this.localValue = false
+			}
+		},
+		handleScroll(event) {
+			console.log(event)
+			event.preventDefault()
+			event.stopPropagation()
+		}
+	},
 	computed: {
 		localValue: {
 			set(value) {
@@ -49,17 +61,18 @@ export default {
 			}
 		}
 	},
-	methods: {
-		closeDialog() {
-			if (this.dialog500) {
-				this.localValue = false
-			}
-		}
-	},
+	
 	watch: {
 		localValue(value) {
 			setTimeout(() => this.dialog500 = value, 500)
 		}
+	},
+	mounted() {
+		// window.addEventListener('scroll', this.handleScroll)
+		// document.body.appendChild(this.$el)
+	},
+	beforeDestroy() {
+		// window.removeEventListener('scroll', this.handleScroll)
 	}
 }
 </script>
@@ -72,9 +85,8 @@ export default {
 	top: 0;
 	bottom: 0;
 	right: 0;
-	background-color: rgb(0, 0, 0);
 	background-color: rgba(0, 0, 0, 0.4);
-
+	
 	.modal-content {
 		background-color: #fff;
 		position: fixed;
@@ -84,6 +96,7 @@ export default {
 		padding: 10px;
 		max-height: 80vh;
 		overflow: auto;
+		border-radius: 8px;
 	}
 }
 
