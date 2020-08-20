@@ -1,7 +1,7 @@
 <template>
 	<transition name="fade" >
-		<div v-if="localValue" class="modal" @scroll="handleScroll">
-			<div class="modal-content" :style="[innerStyle]" v-click-outside="closeDialog">
+		<div v-if="dialog" class="modal">
+			<div ref="content" class="modal-content" :style="[innerStyle]" v-click-outside="closeDialog">
 				<slot></slot>
 			</div>
 		</div>
@@ -10,12 +10,13 @@
 
 <script>
 import ClickOutside from 'vue-click-outside'
-// consider https://github.com/willmcpo/body-scroll-lock
+// import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
+
 export default {
 	props: {
 		value: {
 			type: Boolean,
-			required: true
+			required: false
 		},
 		width: {
 			type: String,
@@ -31,30 +32,17 @@ export default {
 	},
 	data() {
 		return {
-			dialog500: false
+			dialog: false
 		}
 	},
 	methods: {
 		closeDialog() {
-			if (this.dialog500) {
-				this.localValue = false
-			}
-		},
-		handleScroll(event) {
-			console.log(event)
-			event.preventDefault()
-			event.stopPropagation()
+			if (this.dialog) {
+				this.dialog = false
+			}	
 		}
 	},
 	computed: {
-		localValue: {
-			set(value) {
-				this.$emit('change', value)
-			},
-			get() {
-				return this.value
-			}
-		},
 		innerStyle() {
 			return {
 				width: this.width
@@ -63,16 +51,22 @@ export default {
 	},
 	
 	watch: {
-		localValue(value) {
-			setTimeout(() => this.dialog500 = value, 500)
+		value: {
+			handler(value) {
+				this.dialog = value
+			},
+			immediate: true
+		},
+		async dialog(value) {
+			this.$emit('change', value)
+
+			/*if (value) {
+				await this.$nextTick()
+				disableBodyScroll(this.$refs.content)
+			} else {
+				enableBodyScroll(this.$refs.content)
+			}*/
 		}
-	},
-	mounted() {
-		// window.addEventListener('scroll', this.handleScroll)
-		// document.body.appendChild(this.$el)
-	},
-	beforeDestroy() {
-		// window.removeEventListener('scroll', this.handleScroll)
 	}
 }
 </script>

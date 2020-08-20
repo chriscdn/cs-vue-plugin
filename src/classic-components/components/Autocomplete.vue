@@ -6,20 +6,22 @@
 		</div>
 		<!-- <transition name="custom"> -->
 		<div class="autocomplete-items" v-if="focus && items.length && !!inputText">
-			<div v-for="(item, index) in items" :key="index" class="autocomplete-item" :class="{'autocomplete-active': currentFocus==index}" @click="select(index)">
+			<div v-for="(item, index) in itemsFiltered" :key="index" class="autocomplete-item" :class="{'autocomplete-active': currentFocus==index}" @click="select(index)">
 				<slot name="item" v-bind:item="item">{{ item }}</slot>
 			</div>
 		</div>
+
+		<!-- {{ localValue }} -->
 		<!-- </transition> -->
 	</div>
 </template>
+
 <script>
 import ClickOutside from 'vue-click-outside'
 const get = require('lodash.get')
 
 export default {
 	props: {
-
 		value: {
 			type: [String, Object, Number],
 			required: false
@@ -60,6 +62,10 @@ export default {
 		combobox: {
 			type: Boolean,
 			default: false
+		},
+		filter: {
+			type: Function,
+			default: item => !!item
 		}
 	},
 	directives: {
@@ -83,6 +89,10 @@ export default {
 			}
 		},
 
+		itemsFiltered() {
+			return this.items.filter(item => this.filter(item))
+		},
+
 		localValue: {
 			set(value) {
 				if (!value) {
@@ -90,11 +100,11 @@ export default {
 				} else if (this.returnObject) {
 					this.$emit('change', value)
 				} else {
-					this.$emit('change', get(value, this.itemValue))
+					this.$emit('change', get(value, this.itemValue, value))
 				}
 			},
 			get() {
-				return this.isObject(this.value) ? this.value : this.items.find(item => get(item, this.itemValue) == this.value)
+				return this.isObject(this.value) ? this.value : this.items.find(item => get(item, this.itemValue, item) == this.value)
 			}
 		},
 		isValidSelection() {
@@ -145,7 +155,7 @@ export default {
 			this.focus = false
 		},
 		isObject(obj) {
-			typeof obj == 'object' && obj instanceof Object && !(obj instanceof Array)
+			return typeof obj == 'object' && obj instanceof Object && !(obj instanceof Array)
 		},
 		clearInput(event) {
 			this.createWatcher()
@@ -158,7 +168,7 @@ export default {
 			if (!this.$watcher) {
 				this.$watcher = this.$watch('inputText', value => {
 					if (this.combobox) {
-						this.localValue = { text: value }
+						this.localValue = value
 					} else {
 						this.localValue = null
 					}
@@ -175,12 +185,6 @@ export default {
 	watch: {
 		inputText(value) {
 			this.$emit('update:search-input', value)
-
-			// if (this.combobox) {
-			// 	this.localValue = {
-			// 		text: value
-			// 	}
-			// }
 		},
 
 		items() {
@@ -197,10 +201,20 @@ export default {
 
 		value: {
 			handler(v) {
-				if (this.combobox) {
-					this.destroyWatcher()
+				// console.log(`autocomplete value watch: ${JSON.stringify(v)}`)
+				// console.log(`autocomplete localvalue watch: ${JSON.stringify(this.localValue)}`)
+				this.destroyWatcher()
+				this.inputText = get(this.localValue, this.itemText, v)
+
+				/*if (this.combobox) {					
 					this.inputText = v
-				}
+				} else {
+					this.inputText = get(this.localValue, this.itemText, v)
+				}*/
+				// } else {
+				//	this.destroyWatcher()
+				//	this.value = v
+				// }
 			},
 			immediate: true
 		},
