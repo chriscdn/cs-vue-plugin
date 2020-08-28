@@ -11,12 +11,10 @@ export default {
 			type: Boolean,
 			default: false
 		}
-	},
-	data() {
-		return {}
 	}
 }
 </script>
+
 <style lang="less" scoped>
 
 @spinnerSize: 60px;

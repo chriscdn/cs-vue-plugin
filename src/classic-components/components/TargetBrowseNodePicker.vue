@@ -1,14 +1,21 @@
 <template>
-	<div class="rhnodeselect">
-		<input type="text" :value="name" @focus="openWindow" ref="input" />
-		<button @click="openWindow">{{ browseButtonLabel }}</button>
-		<button @click="clear">{{ clearButtonLabel }}</button>
-		<div v-html="breadcrumbString"></div>
-	</div>
+	<span>
+		<slot v-bind:openWindow="openWindow" v-bind:clear="clear">
+			<div class="rhnodeselect">
+				<input type="text" :value="name" @focus="openWindow" ref="input" />
+				<button @click="openWindow">{{ browseButtonLabel }}</button>
+				<button @click="clear">{{ clearButtonLabel }}</button>
+				<div v-html="breadcrumbString"></div>
+			</div>
+		</slot>
+	</span>
 </template>
+
 <script>
 const buildUrl = require('build-url')
 const get = require('lodash.get')
+const cookies = require('js-cookie')
+
 
 export default {
 	props: {
@@ -18,7 +25,7 @@ export default {
 		},
 		objid: {
 			type: Number,
-			default: 2000
+			default: parseInt(cookies.get('TargetBrowseObjID'))
 		},
 		selectperm: {
 			type: Number,
@@ -34,7 +41,7 @@ export default {
 		},
 		selectScreen: {
 			type: Array,
-			default: null
+			default: () => []
 		},
 		browseButtonLabel: {
 			type: String,
@@ -44,17 +51,18 @@ export default {
 			type: String,
 			default: 'clear'
 		},
-		dataid: {
+		value: {
 			type: Number,
 			required: false
 		}
 	},
 	model: {
-		prop: 'dataid',
+		prop: 'value',
 		event: 'change'
 	},
 	data() {
 		return {
+			dataid: this.value,
 			breadcrumb: ''
 		}
 	},
@@ -118,17 +126,21 @@ export default {
 	methods: {
 		openWindow() {
 			window.open(this.url, "WindowName", this.windowParams)
-			this.$refs.input.blur()
+			if (this.$refs.input) {
+				this.$refs.input.blur()
+			}
 		},
 		didCloseWindow() {
 			console.log('didClose')
 		},
 		callback(dataid, breadcrumb) {
 			this.$emit('change', dataid)
+			this.dataid = dataid
 			this.breadcrumb = breadcrumb
 		},
 		clear() {
 			this.$emit('change', null)
+			this.dataid = null
 			this.breadcrumb = null
 		}
 	},

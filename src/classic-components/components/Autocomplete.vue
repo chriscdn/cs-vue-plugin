@@ -109,7 +109,7 @@ export default {
 		},
 		isValidSelection() {
 			return !!this.localValue
-		},
+		}
 	},
 	methods: {
 		select(index) {
@@ -119,7 +119,7 @@ export default {
 				index = Math.max(index, 0)
 			}
 
-			let selectedItem = this.items[index]
+			const selectedItem = this.items[index]
 
 			// on selection we force an immediate blur
 			// this order matters...
@@ -135,15 +135,6 @@ export default {
 				this.destroyWatcher()
 				this.inputText = selectedItem[this.itemText]
 			}
-
-
-
-			/// inputText should be managed from outside, no???? when combobox?
-			// if (selectedItem || !this.combobox) {
-			// 	this.localValue = selectedItem
-			// 	this.destroyWatcher()
-			// 	this.inputText = selectedItem[this.itemText]
-			// }
 		},
 
 		setFocus() {
@@ -200,30 +191,16 @@ export default {
 		},
 
 		value: {
-			handler(v) {
-				// console.log(`autocomplete value watch: ${JSON.stringify(v)}`)
-				// console.log(`autocomplete localvalue watch: ${JSON.stringify(this.localValue)}`)
-				this.destroyWatcher()
-				this.inputText = get(this.localValue, this.itemText, v)
-
-				/*if (this.combobox) {					
-					this.inputText = v
-				} else {
+			handler(v) {	
+				this.destroyWatcher
+				
+				// this check needs to be tested with combobox
+				if (this.localValue) {
 					this.inputText = get(this.localValue, this.itemText, v)
-				}*/
-				// } else {
-				//	this.destroyWatcher()
-				//	this.value = v
-				// }
+				}
 			},
 			immediate: true
 		},
-		// localValue(value) {
-		// 	if (value) {
-		// 		// conso
-		// 		// this.inputText = get(value, this.itemText, '')
-		// 	}
-		// },
 
 		focus(value) {
 			if (value) {
@@ -245,6 +222,7 @@ export default {
 	}
 }
 </script>
+
 <style lang="less" scoped>
 .autocomplete {
 	width: 100%;
@@ -253,7 +231,7 @@ export default {
 
 	input {
 		width: 100%;
-		padding: 0.5em;
+		// padding: 0.5em;
 		border: 1px #CCC solid;
 	}
 
