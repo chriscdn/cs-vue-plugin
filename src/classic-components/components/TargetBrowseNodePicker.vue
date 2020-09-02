@@ -25,7 +25,8 @@ export default {
 		},
 		objid: {
 			type: Number,
-			default: parseInt(cookies.get('TargetBrowseObjID'))
+			required: false,
+			// default: parseInt(cookies.get('TargetBrowseObjID')) || 0
 		},
 		selectperm: {
 			type: Number,
@@ -72,6 +73,8 @@ export default {
 			return `targetbrowse_${this._uid}`
 		},
 
+
+
 		breadcrumbString() {
 			if (this.breadcrumb) {
 				return `Path: ${this.breadcrumb.replace(":", " &#9654; ")}`
@@ -100,8 +103,7 @@ export default {
 				func: 'll',
 				objAction: 'targetBrowse',
 				headerLabel: this.title,
-				objid: this.objid,
-				// objType: 198,
+				objid: this.targetBrowseObjID(),
 				selectPerm: this.selectperm,
 				...this.selectScreenString,
 				formname: 'ignored',
@@ -129,6 +131,10 @@ export default {
 			if (this.$refs.input) {
 				this.$refs.input.blur()
 			}
+		},
+		targetBrowseObjID() {
+			// not computed, since cookies are not reactive
+			return this.objid || parseInt(cookies.get('TargetBrowseObjID')) || 0
 		},
 		didCloseWindow() {
 			console.log('didClose')

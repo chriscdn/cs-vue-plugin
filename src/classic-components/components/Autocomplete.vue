@@ -192,12 +192,12 @@ export default {
 
 		value: {
 			handler(v) {	
-				this.destroyWatcher
+				this.destroyWatcher()
 				
 				// this check needs to be tested with combobox
-				if (this.localValue) {
+				// if (this.localValue) {
 					this.inputText = get(this.localValue, this.itemText, v)
-				}
+				// }
 			},
 			immediate: true
 		},
