@@ -7,6 +7,7 @@
 		<cs-button @click="clear">{{ 'clear' }}</cs-button>
 	</div>
 </template>
+
 <script>
 import flatPickr from 'vue-flatpickr-component'
 // import 'flatpickr/dist/flatpickr.css'
@@ -77,7 +78,7 @@ export default {
 	methods: {
 		formatDate(input) {
 			// this is what you see in the user interface
-			let d = moment(input)
+			const d = moment(input)
 			return this.enableTime ? d.format(this.$jsLongDateFormat) : d.format(this.$jsShortDateFormat)
 		},
 		onClose(selectedDates) {
@@ -91,7 +92,7 @@ export default {
 			this.$emit('change', this.format(Date.now()))
 		},
 		endOfDay() {
-			let d = moment(this.localValue || Date.now())
+			const d = moment(this.localValue || Date.now())
 			d.hours(23)
 			d.minutes(59)
 			d.seconds(59)
