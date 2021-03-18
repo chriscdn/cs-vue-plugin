@@ -1,14 +1,11 @@
 <template>
-	<div>
-		<!-- get rid of div -->
-		<Autocomplete :placeholder="placeholder" v-model="localValue" :width="width" :loading="loading" :search-input.sync="searchText" :readonly="readonly" :items="items" :returnObject="returnObject" :combobox="combobox">
-			<template v-slot:item="data">
-				<img v-if="data.item.type == USER" :src="`${$img}guy.gif`" />
-				<img v-else-if="data.item.type == GROUP" :src="`${$img}2-guys.gif`" />
-				<span v-html="formatChoice(data)"></span><!-- {{ slotProps.item.value }} -->
-			</template>
-		</autocomplete>
-	</div>
+	<Autocomplete :placeholder="placeholder" v-model="localValue" :width="width" :loading="loading" :search-input.sync="searchText" :items="items" :returnObject="returnObject" :combobox="combobox" :editable="editable">
+		<template v-slot:item="data">
+			<img v-if="data.item.type == USER" :src="`${$img}guy.gif`" />
+			<img v-else-if="data.item.type == GROUP" :src="`${$img}2-guys.gif`" />
+			<span v-html="formatChoice(data)"></span>
+		</template>
+	</autocomplete>
 </template>
 <script>
 import Autocomplete from './Autocomplete.vue'
@@ -42,7 +39,11 @@ export default {
 		combobox: {
 			type: Boolean,
 			default: false
-		}
+		},
+		editable: {
+			type: Boolean,
+			default: true
+		},
 	},
 
 	model: {

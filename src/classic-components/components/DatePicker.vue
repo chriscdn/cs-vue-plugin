@@ -1,13 +1,14 @@
 <template>
-	<div>
-		<flat-pickr v-model="localValue" :config="localOptions" @on-close="onClose" @on-change="onClose"/>
+	<div v-if="editable">
+		<flat-pickr v-model="localValue" :config="localOptions" @on-close="onClose" @on-change="onClose" />
 		<cs-button @click="now" v-if="showNow">{{ 'now' }}</cs-button>
 		<cs-button @click="endOfDay" v-if="showEndOfDay">{{ 'end of day' }}</cs-button>
-
 		<cs-button @click="clear">{{ 'clear' }}</cs-button>
 	</div>
+	<div v-else>
+		{{ format(localValue) }}
+	</div>
 </template>
-
 <script>
 import flatPickr from 'vue-flatpickr-component'
 // import 'flatpickr/dist/flatpickr.css'
@@ -40,7 +41,11 @@ export default {
 		options: {
 			type: Object,
 			default: () => ({})
-		}
+		},
+		editable: {
+			type: Boolean,
+			default: true
+		},
 	},
 	model: {
 		prop: 'value',

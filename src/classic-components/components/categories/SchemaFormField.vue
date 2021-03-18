@@ -1,14 +1,13 @@
 <template>
 	<div :class="{'has-errors':hasErrors}">
-		<!-- <slot v-bind:schema="schema"> -->
-		<select v-if="lwidget == 'select'" v-model="valueLocal">
+		<select v-if="lwidget == 'select'" v-model="valueLocal" :disabled="isReadOnly">
 			<option v-for="choice in choices" :key="choice.value" :value="choice.value">{{ choice.text }}</option>
 		</select>
-		<UserPicker v-else-if="lwidget == 'user'" v-model="valueLocal" :groups="false" />
-		<UserPicker v-else-if="lwidget == 'usergroup'" v-model="valueLocal" :groups="true" />
-		<DatePicker v-else-if="lwidget == 'date'" v-model="valueLocal" :enableTime="false" :format="formatDateString" />
-		<DatePicker v-else-if="lwidget == 'datetime'" v-model="valueLocal" :enableTime="true" :format="formatDateTimeString" />
-		<input v-else type="search" v-model="valueLocal" :maxlength="maxLength" />
+		<UserPicker v-else-if="lwidget == 'user'" v-model="valueLocal" :groups="false" :editable="editable" />
+		<UserPicker v-else-if="lwidget == 'usergroup'" v-model="valueLocal" :groups="true" :editable="editable" />
+		<DatePicker v-else-if="lwidget == 'date'" v-model="valueLocal" :enableTime="false" :format="formatDateString" :editable="editable" />
+		<DatePicker v-else-if="lwidget == 'datetime'" v-model="valueLocal" :enableTime="true" :format="formatDateTimeString" :editable="editable" />
+		<input v-else type="search" v-model="valueLocal" :maxlength="maxLength" :readonly="isReadOnly" />
 		<!-- </slot> -->
 		<SchemaErrorMessages :error-path="errorPath" />
 	</div>
@@ -36,7 +35,11 @@ export default {
 		widget: {
 			type: String,
 			default: null
-		}
+		},
+		editable: {
+			type: Boolean,
+			default: true
+		},
 	},
 	model: {
 		prop: 'value',
@@ -133,6 +136,9 @@ export default {
 		},
 		hasErrors() {
 			return this.errorMessages && !!this.errorMessages.length
+		},
+		isReadOnly() {
+			return !this.editable
 		}
 	},
 	methods: {
@@ -157,7 +163,6 @@ export default {
 	}
 }
 </script>
-
 <style lang="less" scoped>
 select,
 input {
@@ -165,6 +170,7 @@ input {
 	width: 100%;
 	border: 1px #CCC solid;
 }
+
 .has-errors {
 	background-color: orange;
 }

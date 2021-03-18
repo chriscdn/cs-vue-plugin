@@ -2,7 +2,7 @@
 	<div class='autocomplete' :style="[style]" v-click-outside="fakeBlur">
 		<div class="d-flex">
 			<slot name="prepend" v-bind:item="localValue"></slot>
-			<input ref="input" type="search" v-model="inputText" autocomplete="off" :class="{invalidSelection: !this.isValidSelection}" :placeholder="placeholder" :readonly="readonly" @keydown="keydown" @search="clearInput" @keydown.38.prevent="currentFocus = Math.max(-1, currentFocus - 1)" @keydown.40.prevent="currentFocus = Math.min(items.length-1, currentFocus + 1)" @keydown.enter.prevent="select(currentFocus)" @focus="setFocus" @keydown.tab="fakeBlur" />
+			<input ref="input" type="search" v-model="inputText" autocomplete="off" :class="{invalidSelection: !this.isValidSelection}" :placeholder="placeholderText" :readonly="!editable" @keydown="keydown" @search="clearInput" @keydown.38.prevent="currentFocus = Math.max(-1, currentFocus - 1)" @keydown.40.prevent="currentFocus = Math.min(items.length-1, currentFocus + 1)" @keydown.enter.prevent="select(currentFocus)" @focus="setFocus" @keydown.tab="fakeBlur" />
 		</div>
 		<!-- <transition name="custom"> -->
 		<div class="autocomplete-items" v-if="focus && items.length && !!inputText">
@@ -10,12 +10,10 @@
 				<slot name="item" v-bind:item="item">{{ item }}</slot>
 			</div>
 		</div>
-
 		<!-- {{ localValue }} -->
-		<!-- </transition> -->
 	</div>
+	
 </template>
-
 <script>
 import ClickOutside from 'vue-click-outside'
 const get = require('lodash.get')
@@ -42,10 +40,10 @@ export default {
 			type: String,
 			default: 'Start typing...'
 		},
-		readonly: {
-			type: Boolean,
-			default: false
-		},
+		// readonly: {
+		// 	type: Boolean,
+		// 	default: false
+		// },
 		width: {
 			type: [String, Number],
 			default: '100%'
@@ -66,7 +64,11 @@ export default {
 		filter: {
 			type: Function,
 			default: item => !!item
-		}
+		},
+		editable: {
+			type: Boolean,
+			default: true
+		},
 	},
 	directives: {
 		ClickOutside
@@ -91,6 +93,10 @@ export default {
 
 		itemsFiltered() {
 			return this.items.filter(item => this.filter(item))
+		},
+
+		placeholderText() {
+			return this.editable ? this.placeholder : null
 		},
 
 		localValue: {
@@ -191,12 +197,12 @@ export default {
 		},
 
 		value: {
-			handler(v) {	
+			handler(v) {
 				this.destroyWatcher()
-				
+
 				// this check needs to be tested with combobox
 				// if (this.localValue) {
-					this.inputText = get(this.localValue, this.itemText, v)
+				this.inputText = get(this.localValue, this.itemText, v)
 				// }
 			},
 			immediate: true
@@ -222,7 +228,6 @@ export default {
 	}
 }
 </script>
-
 <style lang="less" scoped>
 .autocomplete {
 	width: 100%;
