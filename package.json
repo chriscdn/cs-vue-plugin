@@ -5,11 +5,11 @@
 	"browser": "index.js",
 	"license": "MIT",
 	"scripts": {
-		"build": "vue-cli-service build --target lib --name VueWidgets vue-widgets.js"
+		"build": "vue-cli-service build --target lib --name vue-widgets vue-widgets.js"
 	},
 	"dependencies": {
-		"@kweli/cs-rest": "https://github.com/chriscdn/cs-rest",
-		"ajv": "6",
+		"@kweli/cs-rest": "^1.0.20",
+		"ajv": "8.0.1",
 		"arrify": "^2.0.1",
 		"build-url": "^6.0.1",
 		"js-cookie": "^2.2.1",
@@ -27,10 +27,10 @@
 		"vue-toasted": "^1.1.28"
 	},
 	"devDependencies": {
-		"@vue/cli-plugin-babel": "^4.5.10",
-		"@vue/cli-service": "^4.5.10",
-		"less": "^4.0.0",
-		"less-loader": "^7.2.1",
+		"@vue/cli-plugin-babel": "^4.5.12",
+		"@vue/cli-service": "^4.5.12",
+		"less": "^4.1.1",
+		"less-loader": "7",
 		"vue-template-compiler": "^2.6.12"
 	},
 	"browserslist": [
