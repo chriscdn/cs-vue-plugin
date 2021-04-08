@@ -8,7 +8,7 @@
 		"build": "vue-cli-service build --target lib --name vue-widgets vue-widgets.js"
 	},
 	"dependencies": {
-		"@kweli/cs-rest": "^1.0.20",
+		"@kweli/cs-rest": "https://github.com/chriscdn/cs-rest",
 		"ajv": "8.0.1",
 		"arrify": "^2.0.1",
 		"build-url": "^6.0.1",
