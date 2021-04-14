@@ -9,7 +9,7 @@
 	},
 	"dependencies": {
 		"@kweli/cs-rest": "https://github.com/chriscdn/cs-rest",
-		"ajv": "8.0.1",
+		"ajv": "8.1.0",
 		"arrify": "^2.0.1",
 		"build-url": "^6.0.1",
 		"js-cookie": "^2.2.1",
