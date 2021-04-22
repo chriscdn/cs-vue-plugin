@@ -76,16 +76,20 @@ export default {
         Vue.component('UserPicker', UserPicker)
         Vue.component('ToggleButton', ToggleButton)
         Vue.component('VersionFunctionMenu', VersionFunctionMenu)
-        
+
         Vue.filter('moment', function(value, format) {
-            let d = moment(value)
-            switch (format) {
-                case 'long':
-                    return d.format(options.datelong)
-                case 'short':
-                    return d.format(options.dateshort)
-                default:
-                    return d.format(format)
+            const d = moment(value)
+            if (d.isValid()) {
+                switch (format) {
+                    case 'long':
+                        return d.format(options.datelong)
+                    case 'short':
+                        return d.format(options.dateshort)
+                    default:
+                        return d.format(format)
+                }
+            } else {
+                return ""
             }
         })
 
