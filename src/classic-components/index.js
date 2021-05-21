@@ -1,4 +1,5 @@
 const moment = require('moment')
+const get = require('lodash.get')
 
 import Session from '../session'
 import Autocomplete from './components/Autocomplete.vue'
@@ -43,13 +44,24 @@ import 'vue-loading-overlay/dist/vue-loading.css'
 export default {
     install(Vue, options) {
 
+        const isVue3 = get(options, 'isVue3', false)
+
         Vue.use(Session, options)
 
-        Vue.prototype.$img = options.img
-        Vue.prototype.$cgi = options.baseURL
+        if (isVue3) {
+            // v3
+            Vue.config.globalProperties.$img = options.img
+            Vue.config.globalProperties.$cgi = options.baseURL
+            Vue.config.globalProperties.$jsLongDateFormat = options.datelong
+            Vue.config.globalProperties.$jsShortDateFormat = options.dateshort
 
-        Vue.prototype.$jsLongDateFormat = options.datelong
-        Vue.prototype.$jsShortDateFormat = options.dateshort
+        } else {
+            // v2
+            Vue.prototype.$img = options.img
+            Vue.prototype.$cgi = options.baseURL
+            Vue.prototype.$jsLongDateFormat = options.datelong
+            Vue.prototype.$jsShortDateFormat = options.dateshort
+        }
 
         Vue.component('Autocomplete', Autocomplete)
         Vue.component('BrowseLink', BrowseLink)
@@ -77,7 +89,8 @@ export default {
         Vue.component('ToggleButton', ToggleButton)
         Vue.component('VersionFunctionMenu', VersionFunctionMenu)
 
-        Vue.filter('moment', function(value, format) {
+        /*
+        Vue.filter('moment', function (value, format) {
             const d = moment(value)
             if (d.isValid()) {
                 switch (format) {
@@ -92,13 +105,58 @@ export default {
                 return ""
             }
         })
+        */
 
-        // https://www.npmjs.com/package/vue-toasted
-        Vue.use(Toasted, {
-            duration: 5000
+        Vue.mixin({
+            metthods: {
+                moment(value, format) {
+                    const d = moment(value)
+                    if (d.isValid()) {
+                        switch (format) {
+                            case 'long':
+                                return d.format(options.datelong)
+                            case 'short':
+                                return d.format(options.dateshort)
+                            default:
+                                return d.format(format)
+                        }
+                    } else {
+                        return ""
+                    }
+                }
+            },
+            computed: {
+                isVue3() {
+                    return isVue3
+                }
+            }
         })
 
-        // Vue.use(SlimDialog)
-        Vue.use(Loading)
+        if (isVue3) {
+            const prevPrototype = Vue.prototype
+            Vue.prototype = {}
+            // https://www.npmjs.com/package/vue-toasted
+
+            Vue.use(Toasted, {
+                duration: 5000
+            })
+
+            Vue.use(Loading)
+
+            // toasted loading add stuff into Vue.prototype, which is not applicable in Vue3
+            const stuff = Vue.prototype
+            // console.log(stuff)
+
+            Object.assign(Vue.config.globalProperties, stuff)
+
+            Vue.prototype = prevPrototype
+        } else {
+            Vue.use(Toasted, {
+                duration: 5000
+            })
+
+            Vue.use(Loading)
+
+        }
     }
 }

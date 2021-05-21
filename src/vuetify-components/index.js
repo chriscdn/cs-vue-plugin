@@ -18,7 +18,6 @@ export default {
 		Vue.component('DropZone', DropZone)
 		Vue.component('DatePickerDialog', DatePickerDialog)
 		Vue.component('DateTimePickerDialog', DateTimePickerDialog)
-		
 	}
 
 }
