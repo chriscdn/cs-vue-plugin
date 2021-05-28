@@ -1,18 +1,38 @@
 <template>
-	<div class='autocomplete' :style="[style]" v-click-outside="fakeBlur">
+	<div class="autocomplete" :style="[style]" v-click-outside="fakeBlur">
 		<div class="d-flex">
 			<slot name="prepend" v-bind:item="localValue"></slot>
-			<input ref="input" type="search" v-model="inputText" autocomplete="off" :class="{invalidSelection: !this.isValidSelection}" :placeholder="placeholderText" :readonly="!editable" @keydown="keydown" @search="clearInput" @keydown.38.prevent="currentFocus = Math.max(-1, currentFocus - 1)" @keydown.40.prevent="currentFocus = Math.min(items.length-1, currentFocus + 1)" @keydown.enter.prevent="select(currentFocus)" @focus="setFocus" @keydown.tab="fakeBlur" />
+			<input
+				ref="input"
+				type="search"
+				v-model="inputText"
+				autocomplete="off"
+				:class="{ invalidSelection: !isValidSelection }"
+				:placeholder="placeholderText"
+				:readonly="!editable"
+				@keydown="keydown"
+				@search="clearInput"
+				@keydown.38.prevent="currentFocus = Math.max(-1, currentFocus - 1)"
+				@keydown.40.prevent="currentFocus = Math.min(items.length - 1, currentFocus + 1)"
+				@keydown.enter.prevent="select(currentFocus)"
+				@focus="setFocus"
+				@keydown.tab="fakeBlur"
+			/>
 		</div>
 		<!-- <transition name="custom"> -->
 		<div class="autocomplete-items" v-if="focus && items.length && !!inputText">
-			<div v-for="(item, index) in itemsFiltered" :key="index" class="autocomplete-item" :class="{'autocomplete-active': currentFocus==index}" @click="select(index)">
+			<div
+				v-for="(item, index) in itemsFiltered"
+				:key="index"
+				class="autocomplete-item"
+				:class="{ 'autocomplete-active': currentFocus == index }"
+				@click="select(index)"
+			>
 				<slot name="item" v-bind:item="item">{{ item }}</slot>
 			</div>
 		</div>
 		<!-- {{ localValue }} -->
 	</div>
-	
 </template>
 <script>
 import ClickOutside from 'vue-click-outside'
@@ -22,23 +42,23 @@ export default {
 	props: {
 		value: {
 			type: [String, Object, Number],
-			required: false
+			required: false,
 		},
 		itemValue: {
 			type: String,
-			default: 'value'
+			default: 'value',
 		},
 		itemText: {
 			type: String,
-			default: 'text'
+			default: 'text',
 		},
 		returnObject: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 		placeholder: {
 			type: String,
-			default: 'Start typing...'
+			default: 'Start typing...',
 		},
 		// readonly: {
 		// 	type: Boolean,
@@ -46,53 +66,53 @@ export default {
 		// },
 		width: {
 			type: [String, Number],
-			default: '100%'
+			default: '100%',
 		},
 		items: {
 			type: Array,
-			default: () => []
+			default: () => [],
 		},
 		loading: {
 			// not implemented yet
 			type: Boolean,
-			default: false
+			default: false,
 		},
 		combobox: {
 			type: Boolean,
-			default: false
+			default: false,
 		},
 		filter: {
 			type: Function,
-			default: item => !!item
+			default: (item) => !!item,
 		},
 		editable: {
 			type: Boolean,
-			default: true
+			default: true,
 		},
 	},
 	directives: {
-		ClickOutside
+		ClickOutside,
 	},
 	model: {
 		prop: 'value',
-		event: 'change'
+		event: 'change',
 	},
 	data() {
 		return {
 			inputText: '', // this.displayValueFormatter(this.value),
 			currentFocus: -1,
-			focus: false
+			focus: false,
 		}
 	},
 	computed: {
 		style() {
 			return {
-				width: isNaN(this.width) ? this.width : `${this.width}px`
+				width: isNaN(this.width) ? this.width : `${this.width}px`,
 			}
 		},
 
 		itemsFiltered() {
-			return this.items.filter(item => this.filter(item))
+			return this.items.filter((item) => this.filter(item))
 		},
 
 		placeholderText() {
@@ -110,12 +130,12 @@ export default {
 				}
 			},
 			get() {
-				return this.isObject(this.value) ? this.value : this.items.find(item => get(item, this.itemValue, item) == this.value)
-			}
+				return this.isObject(this.value) ? this.value : this.items.find((item) => get(item, this.itemValue, item) == this.value)
+			},
 		},
 		isValidSelection() {
 			return !!this.localValue
-		}
+		},
 	},
 	methods: {
 		select(index) {
@@ -146,7 +166,7 @@ export default {
 		setFocus() {
 			this.focus = true
 		},
-		// we fake blur due to an IE11 bug, which fires blur() when 
+		// we fake blur due to an IE11 bug, which fires blur() when
 		// using the scrollbar
 		fakeBlur() {
 			this.focus = false
@@ -163,7 +183,7 @@ export default {
 		},
 		createWatcher() {
 			if (!this.$watcher) {
-				this.$watcher = this.$watch('inputText', value => {
+				this.$watcher = this.$watch('inputText', (value) => {
 					if (this.combobox) {
 						this.localValue = value
 					} else {
@@ -177,7 +197,7 @@ export default {
 				this.$watcher()
 				this.$watcher = null
 			}
-		}
+		},
 	},
 	watch: {
 		inputText(value) {
@@ -205,7 +225,7 @@ export default {
 				this.inputText = get(this.localValue, this.itemText, v)
 				// }
 			},
-			immediate: true
+			immediate: true,
 		},
 
 		focus(value) {
@@ -221,11 +241,11 @@ export default {
 					this.inputText = null
 				}
 			}
-		}
+		},
 	},
 	mounted() {
 		this.createWatcher()
-	}
+	},
 }
 </script>
 <style lang="less" scoped>
@@ -237,7 +257,7 @@ export default {
 	input {
 		width: 100%;
 		// padding: 0.5em;
-		border: 1px #CCC solid;
+		border: 1px #ccc solid;
 	}
 
 	.autocomplete-items {

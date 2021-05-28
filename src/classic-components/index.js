@@ -44,7 +44,10 @@ import 'vue-loading-overlay/dist/vue-loading.css'
 export default {
     install(Vue, options) {
 
-        const isVue3 = get(options, 'isVue3', false)
+        // is this reliable?
+        const isVue3 = !Vue.prototype
+
+        // const isVue3 = get(options, 'isVue3', false)
 
         Vue.use(Session, options)
 
@@ -108,7 +111,7 @@ export default {
         */
 
         Vue.mixin({
-            metthods: {
+            methods: {
                 moment(value, format) {
                     const d = moment(value)
                     if (d.isValid()) {
@@ -144,10 +147,8 @@ export default {
             Vue.use(Loading)
 
             // toasted loading add stuff into Vue.prototype, which is not applicable in Vue3
-            const stuff = Vue.prototype
-            // console.log(stuff)
 
-            Object.assign(Vue.config.globalProperties, stuff)
+            Object.assign(Vue.config.globalProperties, Vue.prototype)
 
             Vue.prototype = prevPrototype
         } else {
