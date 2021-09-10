@@ -1,5 +1,5 @@
 const moment = require('moment')
-const get = require('lodash.get')
+import get from 'lodash.get'
 
 import Session from '../session'
 import Autocomplete from './components/Autocomplete.vue'
@@ -27,9 +27,7 @@ import UserPicker from './components/UserPicker.vue'
 import TargetBrowseNodePicker from './components/TargetBrowseNodePicker.vue'
 import VersionFunctionMenu from './components/VersionFunctionMenu.vue'
 
-import {
-    ToggleButton
-} from 'vue-js-toggle-button'
+import { ToggleButton } from 'vue-js-toggle-button'
 import Toasted from 'vue-toasted'
 
 // import 'v-slim-dialog/dist/v-slim-dialog.css'
@@ -43,7 +41,6 @@ import 'vue-loading-overlay/dist/vue-loading.css'
 
 export default {
     install(Vue, options) {
-
         // is this reliable?
         const isVue3 = !Vue.prototype
 
@@ -57,7 +54,6 @@ export default {
             Vue.config.globalProperties.$cgi = options.baseURL
             Vue.config.globalProperties.$jsLongDateFormat = options.datelong
             Vue.config.globalProperties.$jsShortDateFormat = options.dateshort
-
         } else {
             // v2
             Vue.prototype.$img = options.img
@@ -111,6 +107,11 @@ export default {
         */
 
         Vue.mixin({
+            computed: {
+                isVue3() {
+                    return isVue3
+                },
+            },
             methods: {
                 moment(value, format) {
                     const d = moment(value)
@@ -124,15 +125,10 @@ export default {
                                 return d.format(format)
                         }
                     } else {
-                        return ""
+                        return ''
                     }
-                }
+                },
             },
-            computed: {
-                isVue3() {
-                    return isVue3
-                }
-            }
         })
 
         if (isVue3) {
@@ -141,7 +137,7 @@ export default {
             // https://www.npmjs.com/package/vue-toasted
 
             Vue.use(Toasted, {
-                duration: 5000
+                duration: 5000,
             })
 
             Vue.use(Loading)
@@ -153,11 +149,10 @@ export default {
             Vue.prototype = prevPrototype
         } else {
             Vue.use(Toasted, {
-                duration: 5000
+                duration: 5000,
             })
 
             Vue.use(Loading)
-
         }
-    }
+    },
 }
