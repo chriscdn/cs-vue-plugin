@@ -5,8 +5,9 @@
 </template>
 <script>
 import get from 'lodash.get'
-const has = require('lodash.has')
-const set = require('lodash.set')
+import has from 'lodash.has'
+import set from 'lodash.set'
+
 import validator from '../../../utils/json-schema'
 
 export default {

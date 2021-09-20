@@ -1,4 +1,4 @@
-const { Session } = require('@kweli/cs-rest')
+import { Session } from '@kweli/cs-rest'
 
 export default {
     install(Vue, options) {

@@ -5,7 +5,7 @@ const options = {
 }
 
 import get from 'lodash.get'
-const debounce = require('lodash.debounce')
+import debounce from 'lodash.debounce'
 
 export default {
     data() {

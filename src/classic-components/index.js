@@ -1,5 +1,4 @@
 const moment = require('moment')
-import get from 'lodash.get'
 
 import Session from '../session'
 import Autocomplete from './components/Autocomplete.vue'

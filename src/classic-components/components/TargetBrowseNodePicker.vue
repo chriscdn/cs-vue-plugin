@@ -12,9 +12,9 @@
 </template>
 
 <script>
-const buildUrl = require('build-url')
+import buildUrl from 'build-url'
 import get from 'lodash.get'
-const cookies = require('js-cookie')
+import cookies from 'js-cookie'
 
 export default {
     model: {

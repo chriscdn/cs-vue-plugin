@@ -1,13 +1,18 @@
-const Ajv = require('ajv')
+import Ajv from 'ajv'
+import moment from 'moment'
+
+import theMeta from 'ajv/lib/refs/json-schema-draft-06.json'
+
 const ajv = new Ajv({
     allErrors: true,
     code: {
         es5: true, // https://www.npmjs.com/package/ajv/v/7.1.1#using-in-es5-environment
     },
 })
-const moment = require('moment')
 
-ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
+// ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
+
+ajv.addMetaSchema(theMeta)
 
 ajv.addFormat('user', {
     type: 'integer',

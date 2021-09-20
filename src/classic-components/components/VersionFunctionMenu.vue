@@ -6,7 +6,7 @@
 <script>
 import FunctionMenu from './FunctionMenu.vue'
 
-const buildUrl = require('build-url')
+import buildUrl from 'build-url'
 
 export default {
     components: { FunctionMenu },

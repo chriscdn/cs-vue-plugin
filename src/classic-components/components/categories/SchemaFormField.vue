@@ -16,8 +16,9 @@
 <script>
 import SchemaErrorMessages from './SchemaErrorMessages.vue'
 import get from 'lodash.get'
-const moment = require('moment')
-const arrify = require('arrify')
+import moment from 'moment'
+import arrify from 'arrify'
+
 export default {
     components: { SchemaErrorMessages },
     inject: ['payload'],

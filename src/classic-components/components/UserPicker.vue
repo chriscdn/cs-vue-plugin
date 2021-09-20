@@ -21,7 +21,7 @@
 <script>
 import Autocomplete from './Autocomplete.vue'
 import get from 'lodash.get'
-const debounce = require('lodash.debounce')
+import debounce from 'lodash.debounce'
 
 export default {
     components: { Autocomplete },
