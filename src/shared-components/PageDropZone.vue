@@ -4,6 +4,9 @@
     </div>
 </template>
 <script>
+/**
+ * This component has been updated in vue-vite-plugin
+ */
 export default {
     props: {
         mimetypes: {
