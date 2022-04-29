@@ -1,29 +1,20 @@
 <template>
-    <h1>
-        {{ title
-        }}<span v-if="subtitle"
-            >: <span class="rhmuted">{{ subtitle }}</span></span
-        >
-    </h1>
+  <h1>
+    {{ title
+    }}<span v-if="subtitle"
+      >: <span class="rhmuted">{{ subtitle }}</span></span
+    >
+  </h1>
 </template>
 
 <script>
 export default {
-    props: {
-        title: {
-            type: String,
-            required: true,
-        },
-        subtitle: {
-            type: String,
-            default: null,
-        },
-    },
+  props: ['title', 'subtitle'],
 }
 </script>
 
 <style scoped lang="less">
 .rhmuted {
-    color: #999;
+  color: #999;
 }
 </style>
