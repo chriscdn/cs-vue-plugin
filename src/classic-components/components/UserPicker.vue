@@ -142,6 +142,7 @@ export default {
             text: item.data.properties.name_formatted,
             value: item.data.properties.id,
             type: item.data.properties.type,
+            title: item.data.properties.title,
           }))
         })
         .finally(() => (this.loading = false))
