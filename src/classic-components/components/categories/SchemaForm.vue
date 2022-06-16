@@ -51,7 +51,7 @@ export default {
       const results = {}
 
       this.validation.forEach((item) => {
-        const sKeypath = item.dataPath.slice(1)
+        const sKeypath = item.instancePath.slice(1)
         const message = `This field ${item.message}.`
         const messages = get(results, sKeypath, [])
 
