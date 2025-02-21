@@ -1,11 +1,15 @@
 const Ajv = require('ajv')
 const ajv = new Ajv({
   allErrors: true,
+  strict: false,
   code: {
     es5: true, // https://www.npmjs.com/package/ajv/v/7.1.1#using-in-es5-environment
   },
 })
 const moment = require('moment')
+
+ajv.addKeyword('x-sort')
+ajv.addKeyword('x-format')
 
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'))
 
